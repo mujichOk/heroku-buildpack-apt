@@ -42,7 +42,7 @@ APT_TRUSTED_PARTS="$APT_DIR/trusted.gpg.d"
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 APT_OPTIONS="$APT_OPTIONS -o dir::etc::sourcelist=$APT_SOURCES"
 
-REUSE_CACHE = true
+REUSE_CACHE=true
 
 if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile ; then
   # Old Aptfile is the same as new
@@ -57,7 +57,7 @@ else
   cp -f "$BUILD_DIR/Aptfile" "$APT_CACHE_DIR/Aptfile"
   cat "/etc/apt/sources.list" > "$APT_SOURCES"    # no cp here
   
-  REUSE_CACHE = false
+  REUSE_CACHE=false
 fi
 
 topic "Updating apt caches"
