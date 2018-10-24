@@ -42,6 +42,8 @@ APT_TRUSTED_PARTS="$APT_DIR/trusted.gpg.d"
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 APT_OPTIONS="$APT_OPTIONS -o dir::etc::sourcelist=$APT_SOURCES"
 
+REUSE_CACHE = true
+
 if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile ; then
   # Old Aptfile is the same as new
   topic "Reusing cache"
@@ -53,8 +55,10 @@ else
   mkdir -p "$APT_STATE_DIR/lists/partial"
   mkdir -p "$APT_SOURCELIST_DIR"   # make dir for sources
   cp -f "$BUILD_DIR/Aptfile" "$APT_CACHE_DIR/Aptfile"
+  cat "/etc/apt/sources.list" > "$APT_SOURCES"    # no cp here
+  
+  REUSE_CACHE = false
 fi
-
 
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
@@ -67,11 +71,7 @@ cp -r /etc/apt/trusted.gpg.d/* $APT_TRUSTED_PARTS
 
 APT_OPTIONS="$APT_OPTIONS -o dir::etc::trusted=$APT_TRUSTED -o dir::etc::trustedparts=$APT_TRUSTED_PARTS"
 
-if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile ; then
-  # Old Aptfile is the same as new
-  topic "Reusing cache"
-else
-  cat "/etc/apt/sources.list" > "$APT_SOURCES"    # no cp here
+if [ "$REUSE_CACHE" = false ] ; then
   # add custom repositories from Aptfile to sources.list
   # like>>    :repo:deb http://cz.archive.ubuntu.com/ubuntu artful main universe
   topic "Adding custom repositories"
@@ -79,6 +79,9 @@ else
   topic "Adding custom repositories fingerprints"
   cat $BUILD_DIR/Aptfile | grep -s -e "^:repo-fingerprint:" | apt-key $APT_OPTIONS adv --keyserver hkp://keyserver.ubuntu.com:80 --recv $(sed 's/^:repo-fingerprint:\(.*\)\s*$/\1/g')
 fi
+
+topic "Updating apt caches 2"
+apt-get $APT_OPTIONS update | indent
 
 for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e "^:repo:"); do
   if [[ $PACKAGE == *deb ]]; then
