@@ -40,7 +40,7 @@ APT_TRUSTED="$APT_DIR/trusted.gpg"
 APT_TRUSTED_PARTS="$APT_DIR/trusted.gpg.d"
 
 cp /etc/apt/trusted.gpg $APT_TRUSTED
-mkdir APT_TRUSTED_PARTS
+mkdir $APT_TRUSTED_PARTS
 cp -r /etc/apt/trusted.gpg.d/* APT_TRUSTED_PARTS
 
 echo "---- apt sources ---"
