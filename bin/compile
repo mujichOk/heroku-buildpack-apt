@@ -43,8 +43,8 @@ cp /etc/apt/trusted.gpg $APT_TRUSTED
 mkdir $APT_TRUSTED_PARTS
 cp -r /etc/apt/trusted.gpg.d/* APT_TRUSTED_PARTS
 
-echo "---- apt sources ---"
-echo "$APT_SOURCES"
+topic "---- apt sources ---"
+topic "$APT_SOURCES"
 
 if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile ; then
   # Old Aptfile is the same as new
