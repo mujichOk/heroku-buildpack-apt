@@ -61,7 +61,7 @@ apt-get $APT_OPTIONS update | indent
 
 ls /etc/apt -la | indent
 
-cp /etc/apt/trusted.gpg $APT_TRUSTED
+cp /etc/apt/trusted.gpg~ $APT_TRUSTED
 mkdir $APT_TRUSTED_PARTS
 cp -r /etc/apt/trusted.gpg.d/* APT_TRUSTED_PARTS
 
