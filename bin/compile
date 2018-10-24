@@ -63,7 +63,7 @@ ls /etc/apt -la | indent
 
 cp /etc/apt/trusted.gpg~ $APT_TRUSTED
 mkdir $APT_TRUSTED_PARTS
-cp -r /etc/apt/trusted.gpg.d/* APT_TRUSTED_PARTS
+cp -r /etc/apt/trusted.gpg.d/* $APT_TRUSTED_PARTS
 
 APT_OPTIONS="$APT_OPTIONS -o dir::etc::trusted=$APT_TRUSTED -o dir::etc::trustedparts=$APT_TRUSTED_PARTS"
 
