@@ -77,7 +77,7 @@ if [ "$REUSE_CACHE" = false ] ; then
   topic "Adding custom repositories"
   cat $BUILD_DIR/Aptfile | grep -s -e "^:repo:" | sed 's/^:repo:\(.*\)\s*$/\1/g' >> $APT_SOURCES
   topic "Adding custom repositories fingerprints"
-  cat $BUILD_DIR/Aptfile | grep -s -e "^:repo-fingerprint:" | apt-key $APT_OPTIONS adv --keyserver hkp://keyserver.ubuntu.com:80 --recv $(sed 's/^:repo-fingerprint:\(.*\)\s*$/\1/g')
+  cat $BUILD_DIR/Aptfile | grep -s -e "^:repo-fingerprint:" | apt-key --keyring APT_TRUSTED adv --keyserver hkp://keyserver.ubuntu.com:80 --recv $(sed 's/^:repo-fingerprint:\(.*\)\s*$/\1/g')
 fi
 
 topic "Updating apt caches 2"
